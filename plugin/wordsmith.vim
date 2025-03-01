@@ -21,7 +21,7 @@ augroup vim-wordsmith/thesaurus | autocmd!
     let synonyms_out = s:thesaurus_map[key][0:limit]
     let options = map(synonyms_out, { i, synonym -> (i+1) . '. ' . synonym })
     let choice = inputlist(options)
-    let replace = s:thesaurus_map[a:word][choice-1]
+    let replace = s:thesaurus_map[key][choice-1]
     echo "\nYou selected " . replace
     execute 'normal! ciw' . replace
   endfunction
