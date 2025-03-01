@@ -11,14 +11,16 @@ augroup vim-wordsmith/thesaurus | autocmd!
     if len(s:thesaurus) == 0
       for line in readfile(&thesaurus)
         let parts = split(line, ',')
-        let [word, synonyms] = [parts[0], parts[1:]]
-        let s:thesaurus[word] = synonyms
+        let [word, synonyms_in] = [parts[0], parts[1:]]
+        let s:thesaurus[word] = synonyms_in
       endfor
     endif
 
-    let synonyms = s:thesaurus[a:word][:&lines - 2]
-    let synonyms = map(synonyms, { i, synonym -> (i+1) . '. ' . synonym })
-    let choice = inputlist(synonyms)
+    let key = tolower(a:word)
+    let limit = &lines - 2
+    let synonyms_out = s:thesaurus[key][0:limit]
+    let options = map(synonyms_out, { i, synonym -> (i+1) . '. ' . synonym })
+    let choice = inputlist(options)
     let replace = s:thesaurus[a:word][choice-1]
     echo "\nYou selected " . replace
     execute 'normal! ciw' . replace
