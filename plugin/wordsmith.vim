@@ -16,13 +16,26 @@ augroup vim-wordsmith/thesaurus | autocmd!
       endfor
     endif
 
+    let Reformat = FormatFn(a:word)
     let key = tolower(a:word)
     let limit = &lines - 2
     let synonyms_out = s:thesaurus_map[key][0:limit]
-    let options = map(synonyms_out, { i, synonym -> (i+1) . '. ' . synonym })
+    let options = map(synonyms_out, { i, synonym -> (i+1) . '. ' . Reformat(synonym) })
     let choice = inputlist(options)
     let replace = s:thesaurus_map[key][choice-1]
-    echo "\nYou selected " . replace
-    execute 'normal! ciw' . replace
+    execute 'normal! ciw' . Reformat(replace)
+  endfunction
+
+  function! FormatFn(word)
+    let all_caps = '\u\u\+'
+    let capitalised = '\u\+'
+
+    if a:word =~ all_caps
+      return { synonym -> toupper(synonym) }
+    elseif a:word =~ capitalised
+      return { synonym -> toupper(synonym[0]) . synonym[1:] }
+    else
+      return { synonym -> synonym }
+    endif
   endfunction
 augroup END
