@@ -16,10 +16,15 @@ augroup vim-wordsmith/thesaurus | autocmd!
       endfor
     endif
 
-    let Reformat = FormatFn(a:word)
     let key = tolower(a:word)
+    if !has_key(s:thesaurus_map, key)
+      echo 'Unable to find "' . key . '" in thesaurus'
+      return
+    endif
+
     let limit = &lines - 2
     let synonyms_out = s:thesaurus_map[key][0:limit]
+    let Reformat = FormatFn(a:word)
     let options = map(synonyms_out, { i, synonym -> (i+1) . '. ' . Reformat(synonym) })
     let choice = inputlist(options)
     let replace = s:thesaurus_map[key][choice-1]
