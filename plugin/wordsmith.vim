@@ -24,14 +24,14 @@ augroup vim-wordsmith/thesaurus | autocmd!
 
     let limit = &lines - 2
     let synonyms_out = s:thesaurus_map[key][0:limit]
-    let Reformat = FormatFn(a:word)
-    let options = map(synonyms_out, { i, synonym -> (i+1) . '. ' . Reformat(synonym) })
+    let Formatter = DeriveMatchCaseLambda(a:word)
+    let options = map(synonyms_out, { i, synonym -> (i+1) . '. ' . Formatter(synonym) })
     let choice = inputlist(options)
     let replace = s:thesaurus_map[key][choice-1]
-    execute 'normal! ciw' . Reformat(replace)
+    execute 'normal! ciw' . Formatter(replace)
   endfunction
 
-  function! FormatFn(word)
+  function! DeriveMatchCaseLambda(word)
     let all_caps = '\u\u\+'
     let capitalised = '\u\+'
 
